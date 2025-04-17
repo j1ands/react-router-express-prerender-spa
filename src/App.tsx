@@ -11,7 +11,7 @@ function App() {
     <>
     <div>
       <nav>
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/home">Home</NavLink>
         <NavLink to="/about">About</NavLink>
       </nav>
     </div>
