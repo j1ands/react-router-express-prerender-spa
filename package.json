@@ -2,14 +2,19 @@
   "name": "react-express-pre-render",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "debug-vite-build": "node --inspect-brk ./node_modules/vite/bin/vite.js build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "react-router typegen && tsc",
+    "start": "node dist/server.js"
   },
   "dependencies": {
+    "@types/express": "^5.0.1",
+    "express": "^5.1.0",
+    "isbot": "^5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.5.0"
@@ -17,6 +22,7 @@
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@react-router/dev": "^7.5.0",
+    "@react-router/node": "^7.5.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

@@ -3,5 +3,8 @@ import type { Config } from "@react-router/dev/config";
 export default {
   appDirectory: "src",
   ssr: false,
-  prerender: true
+  prerender: true,
+  future: {
+    unstable_viteEnvironmentApi: true
+  }
 } satisfies Config;
