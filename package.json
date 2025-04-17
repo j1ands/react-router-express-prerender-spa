@@ -7,15 +7,16 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "react-router typegen && tsc",
-    "start": "npm-run-all -s build -p start:watch:tsc start:watch:vite start:server start:browser-sync",
+    "start": "npm-run-all -s build -p start:watch start:server",
     "build": "npm-run-all -s build:tsc build:vite copy-html",
     "build:tsc": "tsc -b",
     "build:vite": "vite build",
     "copy-html": "mkdir -p dist && cp build/client/__spa-fallback.html dist/",
     "start:server": "PORT=3001 nodemon dist/server.js",
+    "start:watch": "npm-run-all -p start:watch:tsc start:watch:vite start:browser-sync",
     "start:watch:tsc": "tsc -w -p tsconfig.node.json",
     "start:watch:vite": "nodemon --watch src --ext ts,tsx,css,json --exec \"npm run build:vite\"",
-    "start:browser-sync": "browser-sync start --proxy 'localhost:3001' --port 3000 --ui-port 3002 --files 'build/client/**/*' --no-notify --open --snippetOptions.ignorePaths='localhost:3001'"
+    "start:browser-sync": "browser-sync start --proxy 'localhost:3001' --port 3000 --ui-port 3002 --files 'build/client/**/*' --no-notify --open"
   },
   "dependencies": {
     "@types/express": "^5.0.1",
