@@ -18,7 +18,7 @@ async function createServer() {
   app.use(express.static(path.resolve(__dirname, '../build/client')));
 
   const htmlTemplate = fs.readFileSync(
-    path.resolve(__dirname, '../build/client/__spa-fallback.html'), 
+    path.resolve(__dirname, '../dist/__spa-fallback.html'), 
     'utf-8'
   );
 

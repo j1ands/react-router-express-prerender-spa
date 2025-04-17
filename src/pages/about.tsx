@@ -3,7 +3,7 @@ import type { Route } from "./+types/about";
 export async function loader({ request, params }: Route.LoaderArgs) {
   console.log("loader", request, params);
   const post = {
-    title: "Hellos",
+    title: "Hello",
   };
   return post;
 }

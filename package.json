@@ -4,12 +4,19 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
     "debug-vite-build": "node --inspect-brk ./node_modules/vite/bin/vite.js build",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "react-router typegen && tsc",
-    "start": "node dist/server.js"
+    "start": "npm-run-all -s build:tsc build:vite copy-html -p start:server start:watch:tsc start:watch:vite copy-html:watch",
+    "build": "npm-run-all -s build:tsc build:vite copy-html",
+    "build:tsc": "tsc -b",
+    "build:vite": "vite build",
+    "copy-html": "mkdir -p dist && cp build/client/__spa-fallback.html dist/",
+    "copy-html:watch": "wait-on build/client/__spa-fallback.html && copy-html",
+    "start:server": "nodemon dist/server.js",
+    "start:watch:tsc": "tsc -w",
+    "start:watch:vite": "vite build --watch"
   },
   "dependencies": {
     "@types/express": "^5.0.1",
@@ -30,6 +37,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "nodemon": "^3.1.9",
+    "npm-run-all": "^4.1.5",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.1"

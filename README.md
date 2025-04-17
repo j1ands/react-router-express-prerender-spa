@@ -52,3 +52,6 @@ export default tseslint.config({
   },
 })
 ```
+
+# TODO:
+## Consider blog post about this project
