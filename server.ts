@@ -5,6 +5,7 @@ import fs from 'fs';
 
 async function createServer() {
   const app = express()
+  const PORT = process.env.PORT || 3000;
 
   // Create Vite server in middleware mode
   const vite = await createViteServer({
@@ -30,8 +31,8 @@ async function createServer() {
     res.send(htmlTemplate);
   })
 
-  app.listen(3000, () => {
-    console.log("app listening on port 3000");
+  app.listen(PORT, () => {
+    console.log(`app listening on port ${PORT}`);
   })
 }
 
