@@ -1,9 +1,9 @@
 import type { Route } from "./+types/about";
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  console.log("loader", request, params);
+// { request, params }: Route.LoaderArgs
+export async function loader() {
   const post = {
-    title: "Hello",
+    title: "Hellos",
   };
   return post;
 }

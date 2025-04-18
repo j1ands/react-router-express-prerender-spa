@@ -3,20 +3,18 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "debug-vite-build": "node --inspect-brk ./node_modules/vite/bin/vite.js build --watch",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "typecheck": "react-router typegen && tsc",
-    "start": "npm-run-all -s build -p start:watch start:server",
-    "build": "npm-run-all -s build:tsc build:vite copy-html",
+    "build": "NODE_ENV=production npm-run-all -s build:tsc build:vite copy-html",
     "build:tsc": "tsc -b",
     "build:vite": "vite build",
     "copy-html": "mkdir -p dist && cp build/client/__spa-fallback.html dist/",
+    "debug-vite-build": "node --inspect-brk ./node_modules/vite/bin/vite.js build --watch",
+    "dev": "NODE_ENV=development npm-run-all -s build:tsc -p watch:server start:client start:server",
+    "lint": "eslint .",
+    "preview": "NODE_ENV=production npm-run-all -s build start:server",
+    "start:client": "vite --port 3000",
     "start:server": "PORT=3001 nodemon dist/server.js",
-    "start:watch": "npm-run-all -p start:watch:tsc start:watch:vite start:browser-sync",
-    "start:watch:tsc": "tsc -w -p tsconfig.node.json",
-    "start:watch:vite": "nodemon --watch src --ext ts,tsx,css,json --exec \"npm run build:vite\"",
-    "start:browser-sync": "browser-sync start --proxy 'localhost:3001' --port 3000 --ui-port 3002 --files 'build/client/**/*' --no-notify --open"
+    "watch:server": "tsc -w -p tsconfig.node.json",
+    "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
     "@types/express": "^5.0.1",

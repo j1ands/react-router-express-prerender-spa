@@ -14,12 +14,10 @@ export default function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
-  loadContext: AppLoadContext
+  _: AppLoadContext
   // If you have middleware enabled:
   // loadContext: unstable_RouterContextProvider
 ) {
-    console.log("loadContext: ", loadContext);
-
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const userAgent = request.headers.get("user-agent");

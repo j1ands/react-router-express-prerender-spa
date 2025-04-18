@@ -6,6 +6,8 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+// All `fetch` requests should set CORS to `import.meta.env.DEV` & should be made to `import.meta.env.API_BASE_URL`
+
 export function Layout({
   children,
 }: {
