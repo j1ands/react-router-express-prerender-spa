@@ -2,30 +2,44 @@
 
 Coming back to React after a couple of years of SvelteKit, I was hoping to recreate the same developer experience. The good news is that Vite is the backbone of the SvelteKit experience and leveraging it for a React Router v7 app is the default approach. Here is the experience I was hoping to produce:
 
-DEV:
-- vite dev server with HMR
-- react router v7 powering client-side routing
-- express server running in a separate process on a different port
+## Development Environment
+- Vite dev server with HMR
+- React Router v7 powering client-side routing
+- Express server running in a separate process on a different port
 
-PROD:
-- vite build
-- react router v7 powering client-side routing
-- prerendered routes with react router's vite plugin
-- express server servering the prerendered routes and the index.html as a fallback
+## Production Environment
+- Vite build
+- React Router v7 powering client-side routing
+- Prerendered routes with React Router's Vite plugin
+- Express server serving the prerendered routes and the index.html as a fallback
 
-I was able to achieve this largely by following the docs here: [react router framework adoption from component routes](https://reactrouter.com/upgrading/component-routes#enable-ssr-andor-pre-rendering).
+I was able to achieve this largely by following the docs here: [React Router framework adoption from component routes](https://reactrouter.com/upgrading/component-routes#enable-ssr-andor-pre-rendering).
 
-For a more complete guide, follow these steps (working as of 2025-04-20):
+## Setup Guide
 
-(If you have an existing vite + react router + express app that's missing pre-rendering, you can skip to step ten. Though, if you have any issues, confirm that your setup matches the first nine steps.)
+Follow these steps (working as of 2025-04-20):
 
-(An alternative guide based off of `create-react-router` is coming soon.)
+> **Note:** If you have an existing Vite + React Router + Express app that's missing pre-rendering, you can skip to step 10. Though, if you have any issues, confirm that your setup matches the first nine steps.
+>
+> An alternative guide based on `create-react-router` is coming soon.
 
-1. `npx create-vite@latest`
-  a. Choose the React framework and TypeScript variant
-2. Remove `type: module` from the `package.json` file
-3. Save the following dependencies in your `package.json`:
+### 1. Create a new Vite project
+
+```bash
+npx create-vite@latest
 ```
+
+Choose the React framework and TypeScript variant.
+
+### 2. Update package.json
+
+Remove `type: module` from the `package.json` file.
+
+### 3. Install dependencies
+
+Add the following dependencies to your `package.json`:
+
+```json
 // dev dependencies
 "@react-router/dev": "^7.5.0",
 "@react-router/node": "^7.5.0",
@@ -38,9 +52,16 @@ For a more complete guide, follow these steps (working as of 2025-04-20):
 "isbot": "^5",
 "react-router": "^7.5.0",
 ```
-4. Rename `tsconfig.node.json` to `tsconfig.config.json`
-5. Add a new `tsconfig.node.json` file with the following content:
-```
+
+### 4. Configure TypeScript
+
+Rename `tsconfig.node.json` to `tsconfig.config.json`.
+
+### 5. Create a new tsconfig.node.json file
+
+Add a new `tsconfig.node.json` file with the following content:
+
+```json
 {
   "compilerOptions": {
     "target": "ES2020",
@@ -60,8 +81,12 @@ For a more complete guide, follow these steps (working as of 2025-04-20):
   "exclude": ["node_modules", "dist"]
 }
 ```
-6. Update `tsconfig.json` with the following references:
-```
+
+### 6. Update tsconfig.json
+
+Update `tsconfig.json` with the following references:
+
+```json
 {
   "files": [],
   "references": [
@@ -71,15 +96,23 @@ For a more complete guide, follow these steps (working as of 2025-04-20):
   ]
 }
 ```
-7. Update the `tsconfig.app.json` file to include the following:
-```
+
+### 7. Update tsconfig.app.json
+
+Update the `tsconfig.app.json` file to include the following:
+
+```json
 "compilerOptions": {
   "rootDirs": [".", "./.react-router/types"]
 },
 "include": ["src", ".react-router/types/**/*"]
 ```
-8. Create a `server.ts` file with the following content:
-```
+
+### 8. Create server.ts
+
+Create a `server.ts` file with the following content:
+
+```typescript
 import express from 'express'
 import path from 'path';
 import fs from 'fs';
@@ -111,8 +144,12 @@ async function createServer() {
 
 createServer()
 ```
-9. Update the `vite.config.ts` file to utilize the react router plugin, instead of the default vite react plugin:
-```
+
+### 9. Configure Vite
+
+Update the `vite.config.ts` file to utilize the React Router plugin instead of the default Vite React plugin:
+
+```typescript
 import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
 
@@ -127,8 +164,12 @@ export default defineConfig({
   }
 });
 ```
-10. Create a `react-router.config.ts` file with the following content:
-```
+
+### 10. Configure React Router
+
+Create a `react-router.config.ts` file with the following content:
+
+```typescript
 import type { Config } from "@react-router/dev/config";
 
 export default {
@@ -141,11 +182,13 @@ export default {
 } satisfies Config;
 ```
 
-**NOTE**
-The `unstable_viteEnvironmentApi` flag is required for the prerender option to work when ssr is false. Specifically, it avoids the early return [here](https://github.com/remix-run/react-router/blob/main/packages/react-router-dev/vite/plugin.ts#L1661-L1667) when vite is building the production server bundle.
+> **Note:** The `unstable_viteEnvironmentApi` flag is required for the prerender option to work when SSR is false. Specifically, it avoids the early return [here](https://github.com/remix-run/react-router/blob/main/packages/react-router-dev/vite/plugin.ts#L1661-L1667) when Vite is building the production server bundle.
 
-11. Delete the project root `index.html` file and create a `src/root.tsx` file with the following content:
-```
+### 11. Create root layout
+
+Delete the project root `index.html` file and create a `src/root.tsx` file with the following content:
+
+```tsx
 import {
   Links,
   Meta,
@@ -184,15 +227,20 @@ export default function Root() {
   return <Outlet />;
 }
 ```
-12. For the sake of being thorough in this prerender setup, create two new files: `src/pages/home.tsx` and `src/pages/about.tsx`.
 
-```
+### 12. Create page components
+
+For the sake of being thorough in this prerender setup, create two new files: `src/pages/home.tsx` and `src/pages/about.tsx`.
+
+```tsx
+// src/pages/home.tsx
 export default function Home() {
   return <h1>Home</h1>
 }
 ```
 
-```
+```tsx
+// src/pages/about.tsx
 import type { Route } from "./+types/about";
 
 export async function loader() {
@@ -207,19 +255,23 @@ export default function About({ loaderData }: Route.ComponentProps) {
 }
 ```
 
-**NOTE**
+> **Note:** Don't worry about any linting errors in the `src/pages/about.tsx` file. This is expected at this time.
 
-Don't worry about any linting errors in the `src/pages/about.tsx` file. This is expected at this time.
+### 13. Create catch-all component
 
-13. Add a `src/catchall.tsx` file with the following content:
-```
+Add a `src/catchall.tsx` file with the following content:
+
+```tsx
 export default function Component() {
   return <div>Hello, world!</div>;
 }
 ```
 
-14. Add a `src/routes.ts` file with the following content:
-```
+### 14. Configure routes
+
+Add a `src/routes.ts` file with the following content:
+
+```typescript
 import {
   type RouteConfig,
   route,
@@ -227,20 +279,23 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-  // * matches all URLs, the ? makes it optional so it will match / as well
   index("./App.tsx"),
   route("/home", "./pages/home.tsx"),
   route("/about", "./pages/about.tsx"),
+  // * matches all URLs, the ? makes it optional so it will match / as well
   route("*?", "./catchall.tsx"),
 ] satisfies RouteConfig;
 ```
-15. Update the package.json scripts to include the following:
-```
+
+### 15. Update package.json scripts
+
+Update the package.json scripts to include the following:
+
+```json
 "build": "NODE_ENV=production npm-run-all -s build:tsc build:vite copy-html",
 "build:tsc": "tsc -b",
 "build:vite": "vite build",
 "copy-html": "mkdir -p dist && cp build/client/__spa-fallback.html dist/",
-"debug-vite-build": "node --inspect-brk ./node_modules/vite/bin/vite.js build --watch",
 "dev": "NODE_ENV=development npm-run-all -s build:tsc -p watch:server start:client start:server",
 "lint": "eslint .",
 "preview": "NODE_ENV=production npm-run-all -s build start:server",
@@ -249,13 +304,21 @@ export default [
 "watch:server": "tsc -w -p tsconfig.node.json",
 "typecheck": "react-router typegen && tsc"
 ```
-16. Update the .gitignore file to include the following:
+
+### 16. Update .gitignore
+
+Update the .gitignore file to include the following:
+
 ```
 .react-router/
 build/
 ```
-17. Before running the app, you'll need an entry.client.tsx and entry.server.tsx file. Here are the default contents for each, as included in the create-react-router template after running `npx react-router reveal`:
-```
+
+### 17. Create entry files
+
+Before running the app, you'll need an `entry.client.tsx` and `entry.server.tsx` file. Here are the default contents for each, as included in the create-react-router template after running `npx react-router reveal`:
+
+```tsx
 // entry.client.tsx
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
@@ -271,7 +334,7 @@ startTransition(() => {
 });
 ```
 
-```
+```tsx
 // entry.server.tsx
 import { PassThrough } from "node:stream";
 
@@ -344,13 +407,16 @@ export default function handleRequest(
   });
 }
 ```
-18. Replace the contents of the `src/App.tsx` file with the following:
-```
+
+### 18. Create App component
+
+Replace the contents of the `src/App.tsx` file with the following:
+
+```tsx
 import './App.css'
 import { NavLink } from 'react-router'
 
 function App() {
-
   return (
     <nav className="nav">
       <NavLink to="/home">Home</NavLink>
@@ -361,24 +427,40 @@ function App() {
 
 export default App
 ```
-19. Replace the contents of the `src/App.css` file with the following:
-```
+
+### 19. Create App styles
+
+Replace the contents of the `src/App.css` file with the following:
+
+```css
 .nav {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 } 
 ```
-20. Delete the `src/main.tsx` file.
-21. Prior to running `npm run dev`, ensure your browser's cache for localhost is cleared.
-22. Try either:
 
-```
+### 20. Clean up
+
+Delete the `src/main.tsx` file.
+
+### 21. Prepare for development
+
+Prior to running `npm run dev`, ensure your browser's cache for localhost is cleared.
+
+### 22. Run the app
+
+Try either:
+
+```bash
 npm run dev
 ```
-or
-```
+
+Or:
+
+```bash
 npm run build
 npm run preview
 ```
-23. Have fun!
+
+### 23. Have fun!
