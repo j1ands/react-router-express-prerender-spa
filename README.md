@@ -408,6 +408,8 @@ export default function handleRequest(
 }
 ```
 
+> **Note:** The `entry.server.tsx` file is used to statically generate the prerendered routes. It is invoked per route defined in `src/routes.ts` during `npm run build`.
+
 ### 18. Create App component
 
 Replace the contents of the `src/App.tsx` file with the following:
